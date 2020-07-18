@@ -13,6 +13,7 @@ function timeout(ms, promise) {
 function waiting() {
   const h1 = document.createElement('h1');
   h1.textContent = 'waiting';
+  h1.classList.add('msg');
 
   section.appendChild(h1);
 }
@@ -20,7 +21,7 @@ function waiting() {
 async function makeRequest(response) {
   const results = await response.json();
 
-  h1.textContent = '';
+  document.querySelector('.msg').textContent = '';
 
   const pre = document.createElement('pre');
   const a = document.createElement('a');
@@ -35,7 +36,7 @@ async function makeRequest(response) {
 run.addEventListener('click', async function () {
   waiting();
   try {
-    const response = await timeout(1000000, fetch('api/1h'));
+    const response = await timeout(1000000, fetch('api/lh'));
     console.log(response);
     makeRequest(response);
   } catch (err) {
