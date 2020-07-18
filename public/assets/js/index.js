@@ -20,15 +20,16 @@ function waiting() {
 
 async function makeRequest(response) {
   const results = await response.json();
+  const { path, summary, message } = results;
 
   document.querySelector('.msg').textContent = '';
 
   const pre = document.createElement('pre');
   const a = document.createElement('a');
-  pre.textContent = `${JSON.stringify(results)}`;
+  pre.textContent = `${JSON.stringify(results, null, 2)}`;
 
   section.appendChild(pre);
-  a.href = results.path;
+  a.href = path;
   a.textContent = 'Results here';
   section.appendChild(a);
 }
