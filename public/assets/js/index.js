@@ -3,9 +3,7 @@ const section = document.querySelector('#data');
 
 async function checkForSummary() {
   const response = await fetch('/api/summary');
-  if ((response.status = 200)) {
-    makeRequest(response);
-  }
+  await makeRequest(response);
 }
 
 function timeout(ms, promise) {
@@ -76,7 +74,9 @@ run.addEventListener('click', async function () {
   try {
     const response = await timeout(1000000, fetch('/api/lh'));
     console.log(response);
-    makeRequest(response);
+    if (response.status === 200) {
+      await makeRequest(response);
+    }
   } catch (err) {
     console.log(err);
   }
