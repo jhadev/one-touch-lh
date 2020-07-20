@@ -20,7 +20,4 @@ app.use('/api', apiRoutes);
 app.use(express.static('public'));
 app.use('/', htmlRoutes);
 
-// All other routes respond with the index.html file
-
-// Start the server on the port
 app.listen(PORT, () => console.log(`Listening on PORT: ${PORT}`));
