@@ -2,6 +2,7 @@ const express = require('express');
 const apiRoutes = require('./routes/apiRoutes');
 const htmlRoutes = require('./routes/htmlRoutes');
 const serveIndex = require('serve-index');
+const timeout = require('./middleware/timeout');
 
 // Initialize the app and create a port
 const app = express();
@@ -16,6 +17,7 @@ app.use(
   serveIndex('report/lighthouse', { icons: true })
 );
 app.use('/api', apiRoutes);
+app.use(timeout);
 app.use(express.static('public'));
 app.use('/', htmlRoutes);
 
