@@ -3,7 +3,9 @@ const section = document.querySelector('#data');
 
 async function checkForSummary() {
   const response = await fetch('/api/summary');
-  makeRequest(response);
+  if ((response.status = 200)) {
+    makeRequest(response);
+  }
 }
 
 function timeout(ms, promise) {
