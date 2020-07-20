@@ -6,7 +6,7 @@ const cmd = require('node-cmd');
 
 const read = promisify(readFile);
 
-router.get('/summary', timeout, async (req, res) => {
+router.get('/summary', async (req, res) => {
   try {
     const summary = await read('./report/lighthouse/summary.json', 'utf8');
     return res.json({
@@ -25,7 +25,7 @@ router.get('/summary', timeout, async (req, res) => {
   }
 });
 
-router.get('/lh', async (req, res) => {
+router.get('/lh', timeout, async (req, res) => {
   console.log('fetching...');
 
   cmd.get('lighthouse-batch -s -h -f sites.txt', async function (
