@@ -1,6 +1,11 @@
 const run = document.getElementById('run');
 const section = document.querySelector('#data');
 
+async function checkForSummary() {
+  const response = await fetch('api/summary');
+  makeRequest(response);
+}
+
 function timeout(ms, promise) {
   return new Promise(function (resolve, reject) {
     setTimeout(function () {
@@ -23,7 +28,10 @@ function waiting() {
 async function makeRequest(response) {
   const results = await response.json();
   const { path, summary, message } = results;
-  document.querySelector('.msg').textContent = '';
+  if (document.querySelector('.msg')) {
+    document.querySelector('.msg').textContent = '';
+  }
+
   const article = document.createElement('article');
   article.setAttribute('id', 'results');
 
@@ -69,3 +77,5 @@ run.addEventListener('click', async function () {
     console.log(err);
   }
 });
+
+checkForSummary();
