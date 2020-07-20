@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const { readFile } = require('fs');
 const { promisify } = require('util');
-const timeout = require('../middleware/timeout');
+
 const cmd = require('node-cmd');
 
 const read = promisify(readFile);
@@ -25,7 +25,7 @@ router.get('/summary', async (req, res) => {
   }
 });
 
-router.get('/lh', timeout, async (req, res) => {
+router.get('/lh', async (req, res) => {
   console.log('fetching...');
 
   cmd.get('lighthouse-batch -s -h -f sites.txt', async function (
