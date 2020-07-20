@@ -21,7 +21,7 @@ router.get('/lh', async (req, res) => {
       success: true,
       message: 'Job finished',
       path: '/reports',
-      summary,
+      summary: JSON.parse(summary),
     });
   });
 });

@@ -11,8 +11,10 @@ function timeout(ms, promise) {
 }
 
 function waiting() {
+  section.innerHTML = '';
+  run.disabled = true;
   const h1 = document.createElement('h1');
-  h1.textContent = 'waiting';
+  h1.textContent = 'waiting... be patient';
   h1.classList.add('msg');
 
   section.appendChild(h1);
@@ -21,17 +23,40 @@ function waiting() {
 async function makeRequest(response) {
   const results = await response.json();
   const { path, summary, message } = results;
-
   document.querySelector('.msg').textContent = '';
+  const article = document.createElement('article');
+  article.setAttribute('id', 'results');
 
   const pre = document.createElement('pre');
   const a = document.createElement('a');
   pre.textContent = `${JSON.stringify(results, null, 2)}`;
-
-  section.appendChild(pre);
   a.href = path;
   a.textContent = 'Results here';
-  section.appendChild(a);
+
+  section.appendChild(article);
+  article.appendChild(a);
+  article.appendChild(pre);
+
+  summary.forEach((test) => {
+    const div = document.createElement('div');
+    div.setAttribute('id', 'score-info');
+    const link = document.createElement('a');
+    const scoreLink = document.createElement('a');
+    link.textContent = `${test.url}`;
+    link.href = `${test.url}`;
+    link.target = '_blank';
+
+    scoreLink.textContent = `View HTML Report`;
+    scoreLink.href = `${path}/${test.html}`;
+    const score = document.createElement('p');
+    score.textContent = `Performance Score: ${test.detail.performance * 100}`;
+    article.appendChild(div);
+    div.appendChild(link);
+    div.appendChild(score);
+    div.appendChild(scoreLink);
+  });
+
+  run.disabled = false;
 }
 
 run.addEventListener('click', async function () {
