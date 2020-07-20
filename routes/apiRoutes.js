@@ -6,16 +6,15 @@ const cmd = require('node-cmd');
 const read = promisify(readFile);
 
 router.get('/summary', async (req, res) => {
-  const summary = await read('./report/lighthouse/summary.json', 'utf8');
-
-  if (summary) {
+  try {
+    const summary = await read('./report/lighthouse/summary.json', 'utf8');
     return res.json({
       success: true,
       message: 'Job finished',
       path: '/reports',
       summary: JSON.parse(summary),
     });
-  } else {
+  } catch (err) {
     return res.json({
       success: false,
       message: 'Job finished',

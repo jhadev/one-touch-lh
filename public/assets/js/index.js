@@ -2,7 +2,7 @@ const run = document.getElementById('run');
 const section = document.querySelector('#data');
 
 async function checkForSummary() {
-  const response = await fetch('api/summary');
+  const response = await fetch('/api/summary');
   makeRequest(response);
 }
 
@@ -57,7 +57,9 @@ async function makeRequest(response) {
     scoreLink.textContent = `View HTML Report`;
     scoreLink.href = `${path}/${test.html}`;
     const score = document.createElement('p');
-    score.textContent = `Performance Score: ${test.detail.performance * 100}`;
+    score.textContent = `Performance Score: ${
+      test.detail.performance * 100 || 'no data'
+    }`;
     article.appendChild(div);
     div.appendChild(link);
     div.appendChild(score);
@@ -70,7 +72,7 @@ async function makeRequest(response) {
 run.addEventListener('click', async function () {
   waiting();
   try {
-    const response = await timeout(1000000, fetch('api/lh'));
+    const response = await timeout(1000000, fetch('/api/lh'));
     console.log(response);
     makeRequest(response);
   } catch (err) {
