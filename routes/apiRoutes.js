@@ -1,11 +1,12 @@
 const router = require('express').Router();
 const { readFile } = require('fs');
 const { promisify } = require('util');
+const timeout = require('../middleware/timeout');
 const cmd = require('node-cmd');
 
 const read = promisify(readFile);
 
-router.get('/summary', async (req, res) => {
+router.get('/summary', timeout, async (req, res) => {
   try {
     const summary = await read('./report/lighthouse/summary.json', 'utf8');
     return res.json({
