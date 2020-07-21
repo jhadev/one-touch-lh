@@ -11,7 +11,29 @@
   <body>
     <main>
       <section>
-        <button id="run">Run</button>
+        <form>
+          <fieldset>
+            <legend>Choose your sites</legend>
+            <div>
+              <input
+                type="checkbox"
+                id="coach"
+                name="site"
+                value="https://www.coach.com"
+              />
+              <label for="coach">Coach - Homepage</label>
+            </div>
+            <div>
+              <input type="checkbox" id="kate-spade" name="site" value="https://www.katespade.com" />
+              <label for="kate-spade">Kate Spade - Homepage</label>
+            </div>
+         
+            <div>
+            <div>
+              <button id="run" type="submit">Submit form</button>
+            </div>
+          </fieldset>
+        </form>
       </section>
       <section id="data"></section>
     </main>

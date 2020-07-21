@@ -16,7 +16,7 @@ app.use(
   express.static('report/lighthouse'),
   serveIndex('report/lighthouse', { icons: true })
 );
-app.use(timeout);
+// app.use(timeout);
 app.use('/api', apiRoutes);
 app.use(express.static('public'));
 app.use('/', htmlRoutes);

@@ -1,5 +1,6 @@
 const run = document.getElementById('run');
 const section = document.querySelector('#data');
+const main = document.querySelector('main');
 
 async function checkForSummary() {
   const response = await fetch('/api/summary');
@@ -45,9 +46,12 @@ async function makeRequest(response) {
   article.appendChild(a);
   article.appendChild(pre);
 
+  const resultsSection = document.createElement('section');
+  main.appendChild(resultsSection);
+
   summary.forEach((test) => {
     const div = document.createElement('div');
-    div.setAttribute('id', 'score-info');
+    div.setAttribute('class', 'score-info');
     const link = document.createElement('a');
     const scoreLink = document.createElement('a');
     link.textContent = `${test.url}`;
@@ -60,7 +64,7 @@ async function makeRequest(response) {
     score.textContent = `Performance Score: ${
       test.detail.performance * 100 || 'no data'
     }`;
-    article.appendChild(div);
+    resultsSection.appendChild(div);
     div.appendChild(link);
     div.appendChild(score);
     div.appendChild(scoreLink);
@@ -69,14 +73,43 @@ async function makeRequest(response) {
   run.disabled = false;
 }
 
-run.addEventListener('click', async function () {
+const waitFor = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
+
+run.addEventListener('click', async function (e) {
+  e.preventDefault();
+  const sites = document.querySelectorAll('input[type="checkbox"]');
+
+  const checkedSites = [...sites]
+    .filter((site) => {
+      if (site.checked) {
+        return site;
+      }
+    })
+    .map((site) => site.value);
+
+  let body = {
+    sites: checkedSites,
+  };
+
   waiting();
   try {
-    const response = await timeout(1000000, fetch('/api/lh'));
+    const response = await timeout(
+      1000000,
+      fetch('/api/lh', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      })
+    );
     console.log(response);
     if (response.status === 200) {
       await makeRequest(response);
     }
+
+    // await waitFor(120000);
+    // location.reload();
   } catch (err) {
     console.log(err);
   }
