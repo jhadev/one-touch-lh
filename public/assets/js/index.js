@@ -1,5 +1,6 @@
 const run = document.getElementById('run');
 const section = document.querySelector('#data');
+section.setAttribute('class', 'data-results');
 const main = document.querySelector('main');
 
 async function checkForSummary() {
@@ -17,7 +18,10 @@ function timeout(ms, promise) {
 }
 
 function waiting() {
-  section.innerHTML = '';
+  const columns = document.querySelectorAll('.data-results');
+  columns.forEach((column) => {
+    column.innerHTML = '';
+  });
   run.disabled = true;
   const h1 = document.createElement('h1');
   h1.textContent = 'waiting... be patient';
@@ -47,6 +51,7 @@ async function makeRequest(response) {
   article.appendChild(pre);
 
   const resultsSection = document.createElement('section');
+  resultsSection.setAttribute('class', 'data-results');
   main.appendChild(resultsSection);
 
   summary.forEach((test) => {
@@ -62,7 +67,7 @@ async function makeRequest(response) {
     scoreLink.href = `${path}/${test.html}`;
     const score = document.createElement('p');
     score.textContent = `Performance Score: ${
-      test.detail.performance * 100 || 'no data'
+      test.detail ? test.detail.performance * 100 : 'no data'
     }`;
     resultsSection.appendChild(div);
     div.appendChild(link);
@@ -75,7 +80,7 @@ async function makeRequest(response) {
 
 const waitFor = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
 
-run.addEventListener('click', async function (e) {
+async function onSubmit(e) {
   e.preventDefault();
   const sites = document.querySelectorAll('input[type="checkbox"]');
 
@@ -113,6 +118,10 @@ run.addEventListener('click', async function (e) {
   } catch (err) {
     console.log(err);
   }
-});
+}
+
+const form = document.querySelector('form');
+
+form.addEventListener('submit', onSubmit);
 
 checkForSummary();
