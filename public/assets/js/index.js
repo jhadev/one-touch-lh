@@ -1,5 +1,19 @@
 const run = document.getElementById('run');
 const section = document.querySelector('#data');
+section.setAttribute('class', 'data-results');
+const main = document.querySelector('main');
+
+const legend = document.querySelector('legend');
+
+function createList(arr) {
+  arr.forEach((site) => {
+    const div = document.createElement('div');
+    div.innerHTML = site.createHTML();
+    legend.after(div);
+  });
+}
+
+createList(siteList);
 
 async function checkForSummary() {
   const response = await fetch('/api/summary');
@@ -16,7 +30,10 @@ function timeout(ms, promise) {
 }
 
 function waiting() {
-  section.innerHTML = '';
+  const columns = document.querySelectorAll('.data-results');
+  columns.forEach((column) => {
+    column.innerHTML = '';
+  });
   run.disabled = true;
   const h1 = document.createElement('h1');
   h1.textContent = 'waiting... be patient';
@@ -45,9 +62,13 @@ async function makeRequest(response) {
   article.appendChild(a);
   article.appendChild(pre);
 
+  const resultsSection = document.createElement('section');
+  resultsSection.setAttribute('class', 'data-results');
+  main.appendChild(resultsSection);
+
   summary.forEach((test) => {
     const div = document.createElement('div');
-    div.setAttribute('id', 'score-info');
+    div.setAttribute('class', 'score-info');
     const link = document.createElement('a');
     const scoreLink = document.createElement('a');
     link.textContent = `${test.url}`;
@@ -58,9 +79,9 @@ async function makeRequest(response) {
     scoreLink.href = `${path}/${test.html}`;
     const score = document.createElement('p');
     score.textContent = `Performance Score: ${
-      test.detail.performance * 100 || 'no data'
+      test.detail ? test.detail.performance * 100 : 'no data'
     }`;
-    article.appendChild(div);
+    resultsSection.appendChild(div);
     div.appendChild(link);
     div.appendChild(score);
     div.appendChild(scoreLink);
@@ -69,17 +90,52 @@ async function makeRequest(response) {
   run.disabled = false;
 }
 
-run.addEventListener('click', async function () {
+const waitFor = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
+
+async function onSubmit(e) {
+  e.preventDefault();
+  const sites = document.querySelectorAll('input[type="checkbox"]');
+
+  const checkedSites = [...sites]
+    .filter((site) => {
+      if (site.checked) {
+        return site;
+      }
+    })
+    .map((site) => site.value);
+
+  let body = {
+    sites: checkedSites,
+  };
+
   waiting();
   try {
-    const response = await timeout(1000000, fetch('/api/lh'));
+    const response = await timeout(
+      1000000,
+      fetch('/api/lh', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body),
+      })
+    );
     console.log(response);
     if (response.status === 200) {
       await makeRequest(response);
     }
+
+    // await waitFor(120000);
+    // location.reload();
   } catch (err) {
     console.log(err);
+    
+    timer();
   }
-});
+}
+
+const form = document.querySelector('form');
+
+form.addEventListener('submit', onSubmit);
 
 checkForSummary();

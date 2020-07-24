@@ -16,9 +16,9 @@ app.use(
   express.static('report/lighthouse'),
   serveIndex('report/lighthouse', { icons: true })
 );
+// app.use(timeout);
 app.use('/api', apiRoutes);
 app.use(express.static('public'));
 app.use('/', htmlRoutes);
-app.use(timeout);
 
 app.listen(PORT, () => console.log(`Listening on PORT: ${PORT}`));
