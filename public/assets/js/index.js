@@ -3,6 +3,18 @@ const section = document.querySelector('#data');
 section.setAttribute('class', 'data-results');
 const main = document.querySelector('main');
 
+const legend = document.querySelector('legend');
+
+function createList(arr) {
+  arr.forEach((site) => {
+    const div = document.createElement('div');
+    div.innerHTML = site.createHTML();
+    legend.after(div);
+  });
+}
+
+createList(siteList);
+
 async function checkForSummary() {
   const response = await fetch('/api/summary');
   await makeRequest(response);
@@ -117,6 +129,8 @@ async function onSubmit(e) {
     // location.reload();
   } catch (err) {
     console.log(err);
+    
+    timer();
   }
 }
 
