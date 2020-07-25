@@ -1,8 +1,16 @@
+function createId(str) {
+  return str
+    .split('')
+    .filter((char) => char !== ' ')
+    .join('')
+    .toLowerCase();
+}
+
 class Site {
-  constructor(name, url, id) {
+  constructor(name, url) {
     this.name = name;
     this.url = url;
-    this.id = id;
+    this.id = createId(this.name);
   }
 
   createHTML() {
@@ -15,20 +23,11 @@ class Site {
 
 const siteList = [
   // new Site('Coach - HP', 'https://www.coach.com', 'coach-hp'),
-  new Site(
-    'Coach Outlet - HP',
-    'https://www.coachoutlet.com',
-    'coach-outlet-hp'
-  ),
+  new Site('Coach Outlet - HP', 'https://www.coachoutlet.com'),
   new Site(
     'Coach Outlet - PLP',
-    'https://www.coachoutlet.com/shop/event-whats-new-whats-new',
-    'coach-outlet-plp'
+    'https://www.coachoutlet.com/shop/event-whats-new-whats-new'
   ),
-  new Site('Kate Spade - HP', 'https://www.katespade.com', 'kate-spade-hp'),
-  new Site(
-    'Kate Spade - PLP',
-    'https://www.katespade.com/new/',
-    'kate-spade-plp'
-  ),
+  new Site('Kate Spade - HP', 'https://www.katespade.com'),
+  new Site('Kate Spade - PLP', 'https://www.katespade.com/new/'),
 ];
