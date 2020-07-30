@@ -1,6 +1,7 @@
 const run = document.getElementById('run');
 const section = document.querySelector('#data');
 section.setAttribute('class', 'data-results');
+const siteSection = document.querySelector('#site-selection');
 const main = document.querySelector('main');
 
 const legend = document.querySelector('legend');
@@ -86,14 +87,28 @@ async function makeRequest(response) {
     div.appendChild(score);
     div.appendChild(scoreLink);
   });
-
   run.disabled = false;
 }
 
 const waitFor = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
 
+function timer(timeleft) {
+  setInterval(function () {
+    if (timeleft <= 0) {
+      clearInterval(timer);
+      location.reload();
+    }
+    document.querySelector(
+      '.msg'
+    ).innerHTML = `Response timeout, wait for page to reload in ${timeleft} seconds to see results`;
+
+    timeleft -= 1;
+  }, 1000);
+}
+
 async function onSubmit(e) {
   e.preventDefault();
+
   const sites = document.querySelectorAll('input[type="checkbox"]');
 
   const checkedSites = [...sites]
@@ -107,6 +122,8 @@ async function onSubmit(e) {
   let body = {
     sites: checkedSites,
   };
+
+  let timeLeft = checkedSites.length * 60;
 
   waiting();
   try {
@@ -129,8 +146,8 @@ async function onSubmit(e) {
     // location.reload();
   } catch (err) {
     console.log(err);
-    
-    timer();
+
+    timer(timeLeft);
   }
 }
 
