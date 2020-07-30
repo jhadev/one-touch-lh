@@ -1,6 +1,4 @@
-okkkkkkkk
-
-# One Click Lighthouse Batch
+# One Touch Lighthouse
 
 ## Description
 
