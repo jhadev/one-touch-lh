@@ -1,10 +1,11 @@
 const router = require('express').Router();
-const { readFile } = require('fs');
+const { readFile, readdir } = require('fs');
 const { promisify } = require('util');
 
 const cmd = require('node-cmd');
 
 const read = promisify(readFile);
+const readDir = promisify(readdir);
 
 async function sendSummary(req, res) {
   try {
@@ -43,6 +44,29 @@ async function runLighthouse(req, res) {
 }
 
 router.route('/summary').get(sendSummary);
+
+router.route('/json-reports').get(async (req, res) => {
+  const reportDir = await readDir('./report/lighthouse/');
+  console.log(reportDir);
+
+  const files = reportDir.filter((file) => {
+    if (file !== 'summary.json' && file.endsWith('.json')) {
+      return file;
+    }
+  });
+
+  console.log(files);
+
+  const jsonReports = Promise.all(
+    files.map(async (file) => {
+      return await read(`./report/lighthouse/${file}`, 'utf8');
+    })
+  );
+
+  const data = await jsonReports;
+
+  res.json(data);
+});
 
 router.route('/lh').post(runLighthouse);
 
